@@ -14,6 +14,12 @@ const cartSlice = createSlice({
             state.products.push(action.payload)
             state.userId = action.payload.userId
         },
+        removeProduct: (state, action) => {
+            const index = action.payload.id
+            const products = state.products
+
+            products.splice(index, 1)
+        },
         //Thay đổi số lượng sản phẩm trong mỗi đơn hàng:
         changeQuantityInCart: (state, action) => {
             const newProducts = state.products
@@ -47,7 +53,8 @@ const cartSlice = createSlice({
 export const {
     addProduct,
     changeQuantityInCart,
-    checkoutSuccess
+    checkoutSuccess,
+    removeProduct
 } = cartSlice.actions
 
 export default cartSlice.reducer

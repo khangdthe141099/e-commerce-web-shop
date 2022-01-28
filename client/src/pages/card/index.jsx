@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from "react-redux";
 import { useUser } from '../../features/hook'
-import { changeQuantityInCart, checkoutSuccess } from '../../features/cart/cartSlice'
-import { Remove, Add } from '@mui/icons-material';
+import { changeQuantityInCart, checkoutSuccess, removeProduct } from '../../features/cart/cartSlice'
+import { Remove, Add, Delete } from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom'
 import StripeCheckout from 'react-stripe-checkout';
 import { userRequest } from '../../axios/requestMethods'
@@ -35,7 +35,8 @@ import {
   TopText,
   TopTexts,
   Wrapper,
-  Sale
+  Sale,
+  ButtonRemove
 } from './card.elements'
 import Announcement from "../../components/announcement";
 import Footer from "../../components/footer";
@@ -61,6 +62,11 @@ function Cart() {
     setStripeToken(token)
   }
 
+  //Xóa sản phẩm khỏi giỏ hàng khi click remove button:
+  const handleRemove = (id) => {
+    dispatch(removeProduct(id))
+  }
+
   //Thay đổi số lượng mỗi sản phẩm trong cart:
   const handleClick = (type, id) => {
     dispatch(changeQuantityInCart({ type, id }))
@@ -76,13 +82,26 @@ function Cart() {
   //Get total order tương ứng với list product của user:
   useEffect(() => {
     const totalP = userProducts.reduce((total, product) => {
-      const subTotal = product.quantity * product.price
-
+      const price = product.price
+      const isSale = product.sale.isSale
+      const salePercent = product.sale.percent
+      const salePrice = price - price * (salePercent / 100)
+      let subTotal = 0
+      if(isSale) {
+        subTotal = product.quantity * salePrice
+      }else {
+        subTotal = product.quantity * price
+      }
+    
       return total + subTotal
     }, 0)
 
     setTotalPrice(totalP)
   }, [userProducts, userId])
+
+  useEffect(() => {
+      console.log(userProducts)
+  }, [userProducts])
 
   useEffect(() => {
     const makeRequest = async () => {
@@ -180,6 +199,9 @@ function Cart() {
                         </ProductAmountContainer>
                         <ProductPrice>${isSale ? totalSalePrice : totalPrice}</ProductPrice>
                       </PriceDetail>
+                      <ButtonRemove onClick={() => handleRemove(product._id)}>
+                      <Delete color='error'/>
+                      </ButtonRemove>
                     </Product>
                     <Hr />
                   </>

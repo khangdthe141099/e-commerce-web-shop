@@ -69,6 +69,8 @@ function ProductDetail() {
     const location = useLocation()
     const id = location.pathname.split("/")[2]
 
+    const rating = product?.rating
+
     //=========== SALE =================
     const isSale = product?.sale?.isSale
     const price = product?.price
@@ -170,10 +172,10 @@ function ProductDetail() {
 
                     <OverView>
                         <OverViewOption border={true} style={{ display: 'flex', alignItems: 'center' }}>
-                            <NumberOverView>5</NumberOverView>
+                            <NumberOverView>{rating}</NumberOverView>
                             {/* Render number of star of each product */}
                             {
-                                Array(5)
+                                Array(rating)
                                 .fill()
                                 .map((_, index) => (
                                     <Star sx={{ fontSize: '17px', marginTop: '3px', color: '#ee4d2d' }} />

@@ -48,7 +48,7 @@ export const Info = styled.div`
 
 export const Product = styled.div`
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 `;
 
 export const ProductDetail = styled.div`
@@ -152,3 +152,12 @@ export const Button = styled.button`
   color: white;
   font-weight: 600;
 `;
+
+export const ButtonRemove = styled.button`
+    height: 100%;
+    margin-right: 40px;
+    border: none;
+    background: transparent;
+`;
+
+

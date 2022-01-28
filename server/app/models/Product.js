@@ -15,7 +15,8 @@ const ProductSchema = new Schema(
             isSale: { type: Boolean, default: false },
             percent: { type: Number, default: 0 },
          },
-        view: { type: Number, required: true}
+        view: { type: Number, required: true},
+        rating: { type: Number, default: 4, required: true }
     },
     {
         timestamps: true
