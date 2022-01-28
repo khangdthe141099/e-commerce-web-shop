@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useUser } from '../../features/hook'
 import { changeQuantityInCart, checkoutSuccess, removeProduct } from '../../features/cart/cartSlice'
 import { Remove, Add, Delete } from '@mui/icons-material';
+import { fetchProduct } from '../../features/apiCalls'
 import { useNavigate, Link } from 'react-router-dom'
 import StripeCheckout from 'react-stripe-checkout';
 import { userRequest } from '../../axios/requestMethods'
@@ -36,7 +37,8 @@ import {
   TopTexts,
   Wrapper,
   Sale,
-  ButtonRemove
+  ButtonRemove,
+  CartEmptyImg
 } from './card.elements'
 import Announcement from "../../components/announcement";
 import Footer from "../../components/footer";
@@ -139,10 +141,10 @@ function Cart() {
         <Title>YOUR BAG</Title>
         <Top>
           <Link to={'/products'}>
-            <TopButton>CONTINUE SHOPPING</TopButton>
+            <TopButton onClick={() => dispatch(fetchProduct)}>CONTINUE SHOPPING</TopButton>
           </Link>
           <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
+            <TopText>Shopping Bag({userProducts.length})</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
           <StripeCheckout
@@ -160,6 +162,14 @@ function Cart() {
         </Top>
         <Bottom>
           <Info>
+            {/* Kiểm tra nếu không có sp trong giỏ hàng thì hiển thị image cart empty */}
+            {
+              userProducts.length === 0 &&
+              <CartEmptyImg 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMufL_fYUEBmw6UrEM-a_-Xo2JLYpsOLhs8QuP53Kyrg9OGPm2tHvX3x2LRmxAw8RTWrY&usqp=CAU" 
+              alt=""/>
+            }
+            {/* Nếu có sp trong giỏ hàng thì map list sản phẩm và hiển thị */}
             {
               userProducts.map((product, index) => {
                 const price = product.price

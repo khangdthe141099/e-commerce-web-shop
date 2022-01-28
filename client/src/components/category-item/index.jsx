@@ -15,7 +15,7 @@ function CategoryItem({category}) {
 
     //Delay api call => display lazy load:
     const handleClick = () => {
-        fetchProduct(dispatch)
+        dispatch(fetchProduct)
     }
 
     return (

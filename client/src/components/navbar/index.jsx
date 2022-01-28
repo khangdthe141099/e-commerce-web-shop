@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { useUser } from "../../features/hook";
 import { useCart } from "../../features/hook";
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
-import nocart from '../../assets/images/no_cart.png'
+import { removeProduct } from "../../features/cart/cartSlice";
+import nocart from "../../assets/images/no_cart.png";
 import { Badge } from "@mui/material";
 import {
   Container,
@@ -21,11 +21,26 @@ import {
   CartContainer,
   MenuItem,
   NoCart,
-  NoCartImg
+  NoCartImg,
+  ListProductContainer,
+  PrevProductsContainer,
+  PrevTitle,
+  Price,
+  ProductCat,
+  ProductImg,
+  ProductItem,
+  ProductName,
+  RemoveBtn,
+  ViewCartBtn,
+  TitleContainer,
+  ProductCenter,
+  ProductRight,
+  PriceContainer,
+  Quantity,
 } from "./navbar.elements";
 
 function Navbar() {
-  const [quantity, setQuantity] = useState("");
+  const [userProducts, setUserProducts] = useState([]);
 
   const { products } = useCart();
 
@@ -39,16 +54,20 @@ function Navbar() {
     dispatch(logoutSuccess());
   };
 
-  const handleScrollTop = () => {
-    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+  const handleRemove = (id) => {
+    dispatch(removeProduct(id));
   };
 
   //Lấy ra danh sách sản phẩm tương ứng với user:
   useEffect(() => {
     const userProduct = products.filter((product) => product.userId === userId);
 
-    setQuantity(userProduct.length);
+    setUserProducts(userProduct);
   }, [products, userId]);
+
+  const handleScrollTop = () => {
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+  };
 
   return (
     <Container>
@@ -96,19 +115,59 @@ function Navbar() {
           )}
 
           {/* Cart Layout */}
-          <Link to={`/cart/${userId}`}>
-            <CartContainer>
-              {/* <Tooltip title="Cart"> */}
-                <Badge badgeContent={quantity} color="primary">
-                  <ShoppingCartOutlined />
-                </Badge>
-              {/* </Tooltip> */}
+          <CartContainer>
+            <Link to={`/cart/${userId}`}>
+              <Badge badgeContent={userProducts.length} color="primary">
+                <ShoppingCartOutlined />
+              </Badge>
+            </Link>
 
-              <NoCart>
-                  <NoCartImg src={nocart} alt=""/>
-              </NoCart>
-            </CartContainer>
-          </Link>
+            <NoCart noCart={userProducts.length === 0 ? true : false}>
+              {userProducts.length === 0 ? (
+                <NoCartImg src={nocart} alt="" />
+              ) : (
+                <PrevProductsContainer>
+                  <TitleContainer>
+                    <PrevTitle>Added Product</PrevTitle>
+                  </TitleContainer>
+                  <ListProductContainer>
+                    {userProducts.map((product, index) => {
+                      const isSale = product.sale.isSale;
+                      const salePercent = product.sale.percent;
+                      const price = product.price;
+                      const salePrice = price - price * (salePercent / 100);
+                      const category = product.categories[1];
+
+                      console.log(category);
+                      return (
+                        <ProductItem key={index}>
+                          <ProductImg src={product.img} alt="" />
+                          <ProductCenter>
+                            <ProductName>{product.title}</ProductName>
+                            <ProductCat>Phan loai: {category}</ProductCat>
+                          </ProductCenter>
+                          <ProductRight>
+                            <PriceContainer>
+                              <Price>${isSale ? salePrice : price}</Price>
+                              <Quantity>x {product.quantity}</Quantity>
+                            </PriceContainer>
+                            <RemoveBtn
+                              onClick={() => handleRemove(product._id)}
+                            >
+                              Remove
+                            </RemoveBtn>
+                          </ProductRight>
+                        </ProductItem>
+                      );
+                    })}
+                  </ListProductContainer>
+                  <Link to={`/cart/${userId}`}>
+                    <ViewCartBtn>View Cart</ViewCartBtn>
+                  </Link>
+                </PrevProductsContainer>
+              )}
+            </NoCart>
+          </CartContainer>
         </Right>
       </Wrapper>
     </Container>
