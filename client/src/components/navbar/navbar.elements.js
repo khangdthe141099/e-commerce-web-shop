@@ -28,6 +28,10 @@ export const Language = styled.span`
   cursor: pointer;
 `;
 
+export const LanguageOption = styled.button`
+  
+`
+
 export const SearchContainer = styled.div`
   border: 0.5px solid lightgray;
   display: flex;

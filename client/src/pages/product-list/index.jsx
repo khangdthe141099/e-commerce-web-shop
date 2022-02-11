@@ -18,11 +18,15 @@ import Announcement from '../../components/announcement'
 import Products from '../../components/products'
 import NewsLetter from '../../components/news-letter'
 import Footer from '../../components/footer'
+import { useTranslation } from "react-i18next";
 
 function ProductList() {
     const [isProducts, setIsProducts] = useState(false)
     const [filter, setFilter] = useState({})
     const [sort, setSort] = useState("newest")
+
+    //Multiple language:
+    const { t } = useTranslation()
 
     //Get pathname:
     const location = useLocation()
@@ -48,8 +52,12 @@ function ProductList() {
                     ? `http://localhost:5000/product?category=${cat}`
                     : `http://localhost:5000/product`
                 )
-
+                
                 setIsProducts(res.data.length > 0 ? true : false)
+                
+                if(cat === "sale"){
+                    setIsProducts(true)
+                }
             }catch(err){
                 console.log(err)
             }
@@ -73,9 +81,9 @@ function ProductList() {
                             <Title>{cat}</Title>
                             <FilterContainer>
                                 <Filter>
-                                    <FilterText>Filter Products: </FilterText>
+                                    <FilterText>{t('product_category_filter_product')}: </FilterText>
                                     <Select name="color" onChange={handleFilters}>
-                                        <Option disabled selected>Color</Option>
+                                        <Option disabled selected>{t('product_category_filter_color')}</Option>
                                         <Option>White</Option>
                                         <Option>Black</Option>
                                         <Option>Pink</Option>
@@ -84,7 +92,7 @@ function ProductList() {
                                         <Option>Green</Option>
                                     </Select>
                                     <Select name="size" onChange={handleFilters}>
-                                        <Option disabled selected>Size</Option>
+                                        <Option disabled selected>{t('product_category_filter_size')}</Option>
                                         <Option>S</Option>
                                         <Option>M</Option>
                                         <Option>L</Option>
@@ -92,11 +100,11 @@ function ProductList() {
                                 </Filter>
 
                                 <Filter>
-                                    <FilterText>Sort Products: </FilterText>
+                                    <FilterText>{t('product_category_sort_product')}: </FilterText>
                                     <Select onChange={e => setSort(e.target.value)}>
-                                        <Option value="newest">Newest</Option>
-                                        <Option value="asc">Price (asc)</Option>
-                                        <Option value="desc">Price (desc)</Option>
+                                        <Option value="newest">{t('product_category_sort_newest')}</Option>
+                                        <Option value="asc">{t('product_category_sort_price_asc')}</Option>
+                                        <Option value="desc">{t('product_category_sort_price_desc')}</Option>
                                     </Select>
                                 </Filter>
                             </FilterContainer>

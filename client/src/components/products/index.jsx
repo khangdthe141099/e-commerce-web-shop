@@ -12,6 +12,9 @@ import Product from '../product'
 
 function Products({ cat, filter, sort }) {
     const [products, setProducts] = useState([])
+    const [listProducts, setListProducts] = useState([])
+    const [saleProducts, setSaleProducts] = useState([])
+    const [filteredSaleProducts, setFilteredSaleProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
     const [hasMore, setHasMore] = useState(true)
 
@@ -22,6 +25,31 @@ function Products({ cat, filter, sort }) {
     const indexProducts = useRef(1)
 
     //===================================
+    //Fetch list products from database:
+    useEffect(() => {
+        const getProducts = async () => {
+            try{
+                const res = await axios.get(`http://localhost:5000/product`)
+
+                setListProducts(res.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        getProducts()
+    }, [])
+
+    //Get list sale products:
+    useEffect(() => {
+        const getListSaleProducts = () => {
+            const saleProducts = listProducts
+                                 .filter((product) => product.sale.isSale === true)
+    
+            setSaleProducts(saleProducts)
+        }
+        getListSaleProducts()
+    }, [listProducts])
+
 
     //Get all product by category:
     useEffect(() => {
@@ -42,8 +70,9 @@ function Products({ cat, filter, sort }) {
 
     }, [cat])
 
-    //Get all product by category and filter:
+    //Filter Products by Color and Size:
     useEffect(() => {
+        //Filter list products by category:
         cat && setFilteredProducts(
             products.filter(item =>
                 Object.entries(filter).every(([key, value]) =>
@@ -51,21 +80,42 @@ function Products({ cat, filter, sort }) {
                 )
             )
         )
-    }, [products, cat, filter])
 
-    //Sort product:
+        //Filter list products by sale products:
+        if(cat && cat === 'sale'){
+            setFilteredSaleProducts(
+                saleProducts.filter((item) => 
+                Object.entries(filter).every(([key, value]) =>
+                     item[key].includes(value)
+                )
+            ) 
+            ) 
+        }
+    }, [products, saleProducts, cat, filter])
+
+
+    //Sort list products:
     useEffect(() => {
         if ((sort === "newest")) {
             setFilteredProducts((prev) =>
                 [...prev].sort((a, b) => a.createdAt - b.createdAt)
             )
+            setFilteredSaleProducts((prev) =>
+            [...prev].sort((a, b) => a.createdAt - b.createdAt)
+            )
         } else if ((sort === "asc")) {
             setFilteredProducts((prev) =>
                 [...prev].sort((a, b) => a.price - b.price)
             )
+            setFilteredSaleProducts((prev) =>
+            [...prev].sort((a, b) => a.price - b.price)
+            )
         } else {
             setFilteredProducts((prev) =>
                 [...prev].sort((a, b) => b.price - a.price)
+            )
+            setFilteredSaleProducts((prev) =>
+            [...prev].sort((a, b) => b.price - a.price)
             )
         }
     }, [sort])
@@ -74,8 +124,8 @@ function Products({ cat, filter, sort }) {
         try {
             const res = await axios.get(
                 cat
-                    ? `http://localhost:5000/product?category=${cat}`
-                    : `http://localhost:5000/product`)
+                        ? `http://localhost:5000/product?category=${cat}`
+                        : `http://localhost:5000/product`)
 
             //index của sản phẩm => xử lí thêm sản phẩm:
             const index = indexProducts.current
@@ -103,6 +153,7 @@ function Products({ cat, filter, sort }) {
         }
     }
 
+
     return (
         <Container>
             <InfiniteScroll
@@ -121,9 +172,15 @@ function Products({ cat, filter, sort }) {
             >
                 {
                     cat
-                        ? filteredProducts.map((item, index) => (
-                            <Product item={item} key={index} />
-                        ))
+                        ? (
+                            cat === 'sale' ?
+                            filteredSaleProducts.map((item, index) => (
+                                <Product item={item} key={index} />
+                            )) :
+                            filteredProducts.map((item, index) => (
+                                <Product item={item} key={index} />
+                            ))
+                        )
                         : products.map((item, index) => (
                             <Product item={item} key={index} />
                         ))

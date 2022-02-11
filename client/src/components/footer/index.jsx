@@ -23,14 +23,17 @@ import {
     ContactItem,
     Payment
 } from './footer.elements'
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+    const { t } = useTranslation()
+
     return (
         <Container>
             <Left>
                 <Logo>K-Tech.</Logo>
                 <Desc>
-                    New subscribers only. $9.99/mo. after trial. Offer available for a limited time to new subscribers who connect an eligible device to an Apple device running iOS 15 or iPadOS 15 or later. Offer good for 3 months after eligible device pairing.
+                    {t('footer_left_desc')}
                 </Desc>
                 <SocialContainer>
                     <SocialIcon color="#0e8cf1">
@@ -49,23 +52,23 @@ function Footer() {
             </Left>
 
             <Center>
-                <Title>Useful Links</Title>
+                <Title>{t('footer_center_title')}</Title>
                 <List>
-                    <ListItem>Home</ListItem>
-                    <ListItem>Cart</ListItem>
+                    <ListItem>{t('footer_center_option_home')}</ListItem>
+                    <ListItem>{t('footer_center_option_cart')}</ListItem>
                     <ListItem>Mac</ListItem>
                     <ListItem>iPad</ListItem>
                     <ListItem>iPhone</ListItem>
                     <ListItem>Watch</ListItem>
                     <ListItem>AirPods</ListItem>
-                    <ListItem>My Account</ListItem>
-                    <ListItem>Order Tracking</ListItem>
-                    <ListItem>Terms</ListItem>
+                    <ListItem>{t('footer_center_option_account')}</ListItem>
+                    <ListItem>{t('footer_center_option_order_tracking')}</ListItem>
+                    <ListItem>{t('footer_center_option_term')}</ListItem>
                 </List>
             </Center>
 
             <Right>
-                <Title>Contact</Title>
+                <Title>{t('footer_right_title')}</Title>
                 <ContactItem>
                     <Room style={{ marginRight: "10px" }}/>  Km29 Đường Cao Tốc 08, Thạch Hoà, Thạch Thất, Hà Nội
                 </ContactItem>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from "react-router-dom";
 import './index.css';
@@ -9,6 +9,7 @@ import * as serviceWorker from './serviceWorker';
 import { PersistGate } from 'redux-persist/integration/react'
 
 ReactDOM.render(
+  <Suspense>
   <React.StrictMode>
     <Router>
       <Provider store={store}>
@@ -17,7 +18,8 @@ ReactDOM.render(
         </PersistGate>
       </Provider>
     </Router>
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Suspense>,
   document.getElementById('root')
 );
 

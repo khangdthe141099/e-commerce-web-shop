@@ -52,11 +52,13 @@ export const Right = styled.div`
     
 `
 
-export const Option = styled.p`
+export const Option = styled.button`
     display: flex;
     align-items: center;
     color: #ee4d2d;
     font-size: 20px;
+    border: none;
+    background-color: transparent;
 `
 
 export const Body = styled.div`

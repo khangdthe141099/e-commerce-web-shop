@@ -86,3 +86,16 @@ export const popularProducts = [
         img: "https://i.pinimg.com/564x/8c/a4/cd/8ca4cdd64357ecddbf1f4c9109800ac3.jpg"
     },
 ]
+
+export const languages = [
+    {
+      code: "en",
+      name: "English",
+      country_code: "en",
+    },
+    {
+      code: "vn",
+      name: "Vietnam",
+      country_code: "vn",
+    },
+  ];

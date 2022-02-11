@@ -14,8 +14,11 @@ import {
     Button
 } from './slider.elements'
 import { sliderItems } from '../../mock-data/data'
+import { useTranslation } from "react-i18next";
 
 function Slider() {
+    const { t } = useTranslation();
+
     const [slideIndex, setSlideIndex] = useState(0)
 
     const handleClick = (direction) => {
@@ -50,10 +53,10 @@ function Slider() {
                             </ImgContainer>
 
                             <InfoContainer>
-                                <Title>{item.title}</Title>
-                                <Desc>{item.desc}</Desc>
+                                <Title>{t('shop_gifts')}</Title>
+                                <Desc>{t('shop_gifts_title')}</Desc>
                                 <Link to={`/products/${item.cat}`}>
-                                <Button>SHOW NOW</Button>
+                                <Button>{t('shop_now')}</Button>
                                 </Link>
                             </InfoContainer>
                         </Slide>

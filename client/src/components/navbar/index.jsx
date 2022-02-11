@@ -37,10 +37,38 @@ import {
   ProductRight,
   PriceContainer,
   Quantity,
+  LanguageOption,
 } from "./navbar.elements";
+import { languages } from "../../mock-data/data";
+import i18n from "i18next";
+import i18next from "i18next";
+import { useTranslation, initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi from "i18next-http-backend";
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(LanguageDetector)
+  .use(HttpApi)
+  .init({
+    supportedLngs: ["en", "vn"],
+    fallbackLng: "en",
+    detection: {
+      // order and from where user language should be detected
+      order: ["cookie", "htmlTag", "localStorage", "path", "subdomain"],
+      caches: ["cookie"],
+    },
+    backend: {
+      loadPath: "/assets/locales/{{lng}}/translation.json",
+    },
+    react: { useSuspense: false },
+  });
 
 function Navbar() {
+  const { t } = useTranslation();
+
   const [userProducts, setUserProducts] = useState([]);
+  const [typeLanguage, setTypeLanguage] = useState("en");
 
   const { products } = useCart();
 
@@ -48,6 +76,12 @@ function Navbar() {
   const userId = currentUser?._id;
 
   const dispatch = useDispatch();
+
+  const handleChangeLanguage = (code) => {
+    i18next.changeLanguage(code);
+
+    setTypeLanguage(code)
+  };
 
   const handleLogout = () => {
     //Xóa thông tin user ở redux
@@ -73,7 +107,16 @@ function Navbar() {
     <Container>
       <Wrapper>
         <Left>
-          <Language>EN</Language>
+          <Language>
+            {languages.map(({ code, name, country_code }) => (
+              <LanguageOption 
+              disabled={typeLanguage === code ? true : false}
+              onClick={() => handleChangeLanguage(code)} 
+              key={country_code}>
+                {code}
+              </LanguageOption>
+            ))}
+          </Language>
           <SearchContainer>
             <Input />
             <Search style={{ color: "gray", fontSize: 16 }} />
@@ -89,12 +132,14 @@ function Navbar() {
         <Right>
           {currentUser ? (
             <>
-              <MenuItem>Welcome {currentUser.name} !</MenuItem>
+              <MenuItem>
+                {t("welcome")} {currentUser.name} !
+              </MenuItem>
               <Link
                 to="/login"
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={handleLogout}>LOGOUT</MenuItem>
+                <MenuItem onClick={handleLogout}>{t("log_out")}</MenuItem>
               </Link>
             </>
           ) : (
@@ -103,13 +148,13 @@ function Navbar() {
                 to="/register"
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem>REGISTER</MenuItem>
+                <MenuItem>{t("register")}</MenuItem>
               </Link>
               <Link
                 to="/login"
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem>SIGN IN</MenuItem>
+                <MenuItem>{t("sign_in")}</MenuItem>
               </Link>
             </>
           )}
@@ -128,7 +173,7 @@ function Navbar() {
               ) : (
                 <PrevProductsContainer>
                   <TitleContainer>
-                    <PrevTitle>Added Product</PrevTitle>
+                    <PrevTitle>{t('added_product')}</PrevTitle>
                   </TitleContainer>
                   <ListProductContainer>
                     {userProducts.map((product, index) => {
@@ -144,7 +189,7 @@ function Navbar() {
                           <ProductImg src={product.img} alt="" />
                           <ProductCenter>
                             <ProductName>{product.title}</ProductName>
-                            <ProductCat>Phan loai: {category}</ProductCat>
+                            <ProductCat>{t('category')}: {category}</ProductCat>
                           </ProductCenter>
                           <ProductRight>
                             <PriceContainer>
@@ -154,7 +199,7 @@ function Navbar() {
                             <RemoveBtn
                               onClick={() => handleRemove(product._id)}
                             >
-                              Remove
+                              {t('remove_btn')}
                             </RemoveBtn>
                           </ProductRight>
                         </ProductItem>
@@ -162,7 +207,7 @@ function Navbar() {
                     })}
                   </ListProductContainer>
                   <Link to={`/cart/${userId}`}>
-                    <ViewCartBtn>View Cart</ViewCartBtn>
+                    <ViewCartBtn>{t('view_cart_btn')}</ViewCartBtn>
                   </Link>
                 </PrevProductsContainer>
               )}

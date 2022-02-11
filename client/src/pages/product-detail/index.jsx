@@ -53,12 +53,16 @@ import {
 import Navbar from '../../components/navbar'
 import Announcement from '../../components/announcement'
 import Footer from '../../components/footer'
+import { useTranslation } from "react-i18next";
 
 function ProductDetail() {
     const [product, setProduct] = useState({})
     const [quantity, setQuantity] = useState(1)
     const [color, setColor] = useState('')
     const [size, setSize] = useState('')
+
+    //Multiple language:
+    const { t } = useTranslation()
 
     const dispatch = useDispatch()
 
@@ -185,12 +189,12 @@ function ProductDetail() {
 
                         <OverViewOption border={true} paddingLeft={true}>
                             <NumberOverView>350</NumberOverView>
-                            <TextOverView>Evaluate</TextOverView>
+                            <TextOverView>{t('product_detail_evaluate')}</TextOverView>
                         </OverViewOption>
 
                         <OverViewOption paddingLeft={true}>
                             <NumberOverView>998</NumberOverView>
-                            <TextOverView>Sold</TextOverView>
+                            <TextOverView>{t('product_detail_sold')}</TextOverView>
                         </OverViewOption>
                     </OverView>
 
@@ -205,7 +209,7 @@ function ProductDetail() {
 
                                 <Remaining>
                                     <AccessTime sx={{ color: 'white', marginRight: '5px' }} />
-                                    <RemainingTitle>ENDS IN</RemainingTitle>
+                                    <RemainingTitle>{t('product_detail_ends_in')}</RemainingTitle>
                                     <TimeContainer>
                                         <TimeBlock>10</TimeBlock>
                                         <TimeBlock>25</TimeBlock>
@@ -227,7 +231,7 @@ function ProductDetail() {
                             (
                                 <SaleContainer>
                                     <SalePrice>{salePrice}</SalePrice>
-                                    <SalePercent>{salePercent}% SALE</SalePercent>
+                                    <SalePercent>{salePercent}% {t('product_detail_sale')}</SalePercent>
                                 </SaleContainer>
                             )
                         }
@@ -235,7 +239,7 @@ function ProductDetail() {
 
                     <FilterContainer>
                         <Filter>
-                            <FilterTitle>Color</FilterTitle>
+                            <FilterTitle>{t('product_detail_color')}</FilterTitle>
                             {
                                 product.color?.map((c) => (
                                     <FilterColor color={c} key={c}
@@ -245,7 +249,7 @@ function ProductDetail() {
                             }
                         </Filter>
                         <Filter>
-                            <FilterTitle>Size</FilterTitle>
+                            <FilterTitle>{t('product_detail_size')}</FilterTitle>
                             <FilterSize onChange={(e) => setSize(e.target.value)}>
                                 {
                                     product.size?.map((s) => (
@@ -257,7 +261,7 @@ function ProductDetail() {
                     </FilterContainer>
 
                     <AmountContainer>
-                        <AmountTitle>Quantity</AmountTitle>
+                        <AmountTitle>{t('product_detail_quantity')}</AmountTitle>
                         <Remove onClick={() => handleQuantity("dec")} />
                         <Amount>{quantity}</Amount>
                         <Add onClick={() => handleQuantity("inc")} />
@@ -266,19 +270,19 @@ function ProductDetail() {
                     <AddContainer>
                         <AddToCartBtn onClick={handleClick}>
                             <AddShoppingCart sx={{ marginRight: '7px' }} />
-                            <TextButton>Add To Cart</TextButton>
+                            <TextButton>{t('product_detail_btn_add_to_cart')}</TextButton>
                         </AddToCartBtn>
                         <BuyNowBtn>
-                            <TextButton>Buy Now</TextButton>
+                            <TextButton>{t('product_detail_btn_buy_now')}</TextButton>
                         </BuyNowBtn>
                     </AddContainer>
 
                     <Guarantee>
                         <GLeft>
                             <GuaranteeIcon src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/pdp/67454c89080444c5997b53109072c9e0.png"/>
-                            K-Tech. Guarantee
+                            K-Tech. {t('product_detail_guarantee')}
                         </GLeft>
-                        <GRight>Get the items you ordered or get your money back</GRight>
+                        <GRight>{t('product_detail_money_back')}</GRight>
                     </Guarantee>
                 </InfoContainer>
             </Wrapper>

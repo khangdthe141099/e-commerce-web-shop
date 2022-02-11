@@ -43,6 +43,7 @@ import {
 import Announcement from "../../components/announcement";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
+import { useTranslation } from "react-i18next";
 
 function Cart() {
   const { products } = useCart()
@@ -53,6 +54,9 @@ function Cart() {
   const [stripeToken, setStripeToken] = useState(null)
   const [userProducts, setUserProducts] = useState([])
   const [totalPrice, setTotalPrice] = useState(0)
+
+  //Multiple language:
+  const { t } = useTranslation()
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -135,17 +139,17 @@ function Cart() {
 
   return (
     <Container>
-      <Navbar />
       <Announcement />
+      <Navbar />
       <Wrapper>
-        <Title>YOUR BAG</Title>
+        <Title>{t('product_cart_your_bag')}</Title>
         <Top>
           <Link to={'/products'}>
-            <TopButton onClick={() => dispatch(fetchProduct)}>CONTINUE SHOPPING</TopButton>
+            <TopButton onClick={() => dispatch(fetchProduct)}>{t('product_cart_continue_shopping')}</TopButton>
           </Link>
           <TopTexts>
-            <TopText>Shopping Bag({userProducts.length})</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            <TopText>{t('product_cart_shopping_bag')} ({userProducts.length})</TopText>
+            <TopText>{t('product_cart_your_wishlish')} (0)</TopText>
           </TopTexts>
           <StripeCheckout
             name="K-Tech"
@@ -157,7 +161,7 @@ function Cart() {
             token={onToken}
             stripeKey={KEY}
           >
-            <TopButton type="filled">CHECKOUT NOW</TopButton>
+            <TopButton type="filled">{t('product_cart_checkout_now')}</TopButton>
           </StripeCheckout>
         </Top>
         <Bottom>
@@ -187,9 +191,9 @@ function Cart() {
                         <Image src={product.img} />
                         <Details>
                           <ProductName>
-                            <b>Product:</b> {product.title}
+                            <b>{t('product_cart_product')}:</b> {product.title}
                             {
-                              isSale && <Sale>{salePercent}% SALE</Sale>
+                              isSale && <Sale>{salePercent}% {t('product_cart_sale')}</Sale>
                             }
                           </ProductName>
                           <ProductId>
@@ -197,7 +201,7 @@ function Cart() {
                           </ProductId>
                           <ProductColor color={product.color} />
                           <ProductSize>
-                            <b>Size:</b> {product.size}
+                            <b>{t('product_cart_size')}:</b> {product.size}
                           </ProductSize>
                         </Details>
                       </ProductDetail>
@@ -220,21 +224,21 @@ function Cart() {
             }
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>{t('product_cart_order_summary')}</SummaryTitle>
             <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
+              <SummaryItemText>{t('product_cart_sub_total')}</SummaryItemText>
               <SummaryItemPrice>$ {totalPrice}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
+              <SummaryItemText>{t('product_cart_estimate_shipping')}</SummaryItemText>
               <SummaryItemPrice>$ 5.90</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
+              <SummaryItemText>{t('product_cart_shipping_discount')}</SummaryItemText>
               <SummaryItemPrice>$ -5.90</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
+              <SummaryItemText>{t('product_cart_total')}</SummaryItemText>
               <SummaryItemPrice>$ {totalPrice}</SummaryItemPrice>
             </SummaryItem>
 
@@ -249,7 +253,7 @@ function Cart() {
               token={onToken}
               stripeKey={KEY}
             >
-              <Button>CHECKOUT NOW</Button>
+              <Button>{t('product_cart_checkout_now')}</Button>
             </StripeCheckout>
             {/* =========================== */}
 

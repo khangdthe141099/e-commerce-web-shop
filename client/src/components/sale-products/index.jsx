@@ -35,10 +35,17 @@ import {
     Info
 } from './sale-products.elements'
 import Countdown from '../countdown'
+import { useTranslation } from "react-i18next";
+import { fetchProduct } from '../../features/apiCalls'
+import { useDispatch } from 'react-redux'
 
 function SaleProducts() {
     const [products, setProducts] = useState([])
     const [slideIndex, setSlideIndex] = useState(0)
+
+    const { t } = useTranslation()
+
+    const dispatch = useDispatch()
 
     //Filter to get list sale products:
     const saleProducts = products.filter((product) => product.sale.isSale === true)
@@ -86,10 +93,12 @@ function SaleProducts() {
                 </Left>
 
                 <Right>
-                    <Option>
-                        See all
+                <Link to="/products/sale" style={{textDecoration: "none"}}>
+                    <Option onClick={() => dispatch(fetchProduct)}>
+                        {t('see_all')} 
                         <ArrowForwardIos fontSize="small" />
                     </Option>
+                </Link>
                 </Right>
             </Header>
 
@@ -118,12 +127,12 @@ function SaleProducts() {
 
                                         <DiscountContainer>
                                             <Percent>{salePercent}%</Percent>
-                                            <DiscountTitle>SALE</DiscountTitle>
+                                            <DiscountTitle>{t('sale')}</DiscountTitle>
                                         </DiscountContainer>
 
                                         <InfoContainer>
-                                            <Price>Price: {salePrice}</Price>
-                                            <Sold>Sold 4</Sold>
+                                            <Price>{t('price')} {salePrice}</Price>
+                                            <Sold>{t('product_detail_sold')} 4</Sold>
                                         </InfoContainer>
 
                                         <Info>
